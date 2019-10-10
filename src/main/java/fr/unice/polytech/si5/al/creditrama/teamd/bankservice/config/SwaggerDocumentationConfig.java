@@ -1,4 +1,4 @@
-package com.unice.polytech.creditrama.teamd.bankservice.config;
+package fr.unice.polytech.si5.al.creditrama.teamd.bankservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
