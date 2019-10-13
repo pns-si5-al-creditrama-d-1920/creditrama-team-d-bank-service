@@ -1,11 +1,13 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.bankservice.config;
 
+import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
@@ -16,7 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @Import(BeanValidatorPluginsConfiguration.class)
 public class SwaggerDocumentationConfig implements WebMvcConfigurer {
-    ApiInfo apiInfo() {
+    /*ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("BankService API")
                 .description("API for the BankManagement")
@@ -33,6 +35,14 @@ public class SwaggerDocumentationConfig implements WebMvcConfigurer {
                 .apis(RequestHandlerSelectors.basePackage("com.unice.polytech.creditrama.teamd.bankservice"))
                 .build()
                 .apiInfo(apiInfo());
+    }*/
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .paths(Predicates.not(PathSelectors.regex("/error.*")))
+                .build();
     }
-
 }
