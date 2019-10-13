@@ -56,7 +56,6 @@
             <scope>test</scope>
         </dependency>
 
-
         <!-- SpringFox -->
         <dependency>
             <groupId>io.springfox</groupId>
