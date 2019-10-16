@@ -5,6 +5,7 @@ pipeline {
     environment {
         VERSION = "${currentBuild.number}"
     }
+
     stages {
         stage('Compile') {
             steps {
