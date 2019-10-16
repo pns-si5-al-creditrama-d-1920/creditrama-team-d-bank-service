@@ -2,7 +2,7 @@ package fr.unice.polytech.si5.al.creditrama.teamd.bankservice.controller;
 
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.Client;
-import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.repository.UserRepository;
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +16,15 @@ import java.util.Optional;
 @RequestMapping("/bank")
 public class BankController {
     @Autowired
-    private UserRepository userRepository;
+    private ClientRepository clientRepository;
 
-    public BankController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public BankController(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
     }
 
     @GetMapping("/{id}/bank/accounts")
     public ResponseEntity<List<BankAccount>> getMyBankAccounts(@PathVariable(value = "id") Integer id) {
-        Optional<Client> user = userRepository.findById(id);
+        Optional<Client> user = clientRepository.findById(id);
         if (user.isPresent()) {
             return new ResponseEntity<>(user.get().getBankAccounts(), HttpStatus.OK);
         }
@@ -33,12 +33,12 @@ public class BankController {
 
     @PostMapping("/{id}/bank/accounts")
     public ResponseEntity<BankAccount> createBankAccount(@PathVariable(value = "id") Integer id) {
-        Optional<Client> user = userRepository.findById(id);
+        Optional<Client> user = clientRepository.findById(id);
         if (user.isPresent()) {
             BankAccount bankAccount = new BankAccount();
             bankAccount.setBalance(0);
             user.get().getBankAccounts().add(bankAccount);
-            userRepository.save(user.get());
+            clientRepository.save(user.get());
             return new ResponseEntity<>(bankAccount, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);

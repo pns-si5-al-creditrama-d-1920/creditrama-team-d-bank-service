@@ -2,12 +2,12 @@ package fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model;
 
 import lombok.*;
 
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
