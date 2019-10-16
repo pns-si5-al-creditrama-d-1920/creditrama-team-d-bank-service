@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label "jenkins-maven"
+        label "jenkins-maven-postgres"
     }
     environment {
         VERSION = "${currentBuild.number}"
