@@ -18,7 +18,6 @@
         <java.version>1.8</java.version>
         <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
         <swagger.version>2.9.2</swagger.version>
-        <h2.version>1.4.197</h2.version>
         <dockerfile-maven-version>1.4.12</dockerfile-maven-version>
         <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
     </properties>
@@ -108,10 +107,12 @@
 
         <!-- JDBC -->
 
+        <!-- JDBC -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+            <version>${postgresql.version}</version>
         </dependency>
 
         <dependency>
