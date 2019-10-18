@@ -1,34 +1,30 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model;
 
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.security.Role;
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.security.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
-@Entity
-@Builder
-@Getter
-@Setter
 @NoArgsConstructor
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Data
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class Client implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    private String name;
-    private String login;
-    private String password;
+public class Client extends User {
+
+
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
     private List<BankAccount> bankAccounts;
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
     private List<BankAccount> recipients;
 
-    public Client(String name, String login, String password) {
-        this.name = name;
-        this.login = login;
-        this.password = password;
+    public Client(Integer id, String username, String password, String email, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, List<Role> roles, List<BankAccount> bankAccounts, List<BankAccount> recipients) {
+        super(id, username, password, email, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, roles);
+        this.bankAccounts = bankAccounts;
+        this.recipients = recipients;
     }
 }

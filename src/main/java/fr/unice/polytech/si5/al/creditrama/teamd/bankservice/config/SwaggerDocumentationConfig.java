@@ -1,13 +1,11 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.bankservice.config;
 
-import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
@@ -32,7 +30,7 @@ public class SwaggerDocumentationConfig implements WebMvcConfigurer {
     public Docket customImplementation() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("fr.unice.polytech.si5.al.creditrama.teamd.bankservic"))
+                .apis(RequestHandlerSelectors.basePackage("fr.unice.polytech.si5.al.creditrama.teamd.bankservice"))
                 .build()
                 .apiInfo(apiInfo());
     }

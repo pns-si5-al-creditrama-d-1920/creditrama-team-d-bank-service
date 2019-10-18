@@ -22,7 +22,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<Client>> getUsers() {
-        List<Client> clients = new ArrayList<Client>();
+        List<Client> clients = new ArrayList<>();
         Iterable<Client> source = clientRepository.findAll();
         source.forEach(clients::add);
         return new ResponseEntity<>(clients, HttpStatus.OK);
