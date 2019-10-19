@@ -12,5 +12,7 @@ public interface ClientService {
 
     Client fetchById(int profileId);
 
-    List<Client> fetchAllProfiles();
+    Client fetchByName(String name);
+
+    List<Client> fetchAllClient();
 }

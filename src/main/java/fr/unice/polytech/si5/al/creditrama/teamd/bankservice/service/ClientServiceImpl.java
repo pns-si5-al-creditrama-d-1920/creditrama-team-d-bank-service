@@ -30,7 +30,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<Client> fetchAllProfiles() {
+    public Client fetchByName(String name) {
+        return customerRepository.findByUsername(name);
+    }
+
+    @Override
+    public List<Client> fetchAllClient() {
         return customerRepository.findAll();
     }
 }
