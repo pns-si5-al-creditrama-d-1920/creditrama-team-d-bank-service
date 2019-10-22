@@ -8,6 +8,8 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
 
+import java.util.logging.Logger;
+
 @Service
 @EnableBinding(NotificationStreams.class)
 public class NotificationService {
@@ -18,6 +20,7 @@ public class NotificationService {
     }
 
     public void sendGreeting(String email) {
+
         MessageChannel messageChannel = notificationStreams.outboundNotification();
 
         messageChannel.send(MessageBuilder

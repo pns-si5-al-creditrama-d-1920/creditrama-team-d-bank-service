@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/bank")
+@RequestMapping("bank")
 public class BankController {
     @Autowired
     private ClientRepository clientRepository;
@@ -26,7 +27,7 @@ public class BankController {
         this.notificationService = notificationService;
     }
 
-    @GetMapping("/{id}/bank/accounts")
+    @GetMapping("{id}/bank/accounts")
     public ResponseEntity<List<BankAccount>> getMyBankAccounts(@PathVariable(value = "id") Integer id) {
         Optional<Client> user = clientRepository.findById(id);
         if (user.isPresent()) {
@@ -35,11 +36,11 @@ public class BankController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/{id}/bank/accounts")
+    @PostMapping("{id}/bank/accounts")
     public ResponseEntity<BankAccount> createBankAccount(@PathVariable(value = "id") Integer id) {
         Optional<Client> user = clientRepository.findById(id);
         if (user.isPresent()) {
-            this.notificationService.sendGreeting("{ \"email\": \"theo.foray@gmail.com\" }");
+            this.notificationService.sendGreeting("{ \"email\": \""+user.get().getEmail()+"\" }");
             BankAccount bankAccount = new BankAccount();
             bankAccount.setBalance(0);
             user.get().getBankAccounts().add(bankAccount);
