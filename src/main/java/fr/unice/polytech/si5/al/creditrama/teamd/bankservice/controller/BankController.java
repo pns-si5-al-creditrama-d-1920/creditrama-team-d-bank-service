@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/bank")
+@RequestMapping("bank")
 public class BankController {
     @Autowired
     private ClientRepository clientRepository;
@@ -44,8 +45,8 @@ public class BankController {
     public ResponseEntity<BankAccount> createBankAccount(@PathVariable(value = "id") Integer id, @RequestBody BankAccount account) {
         Optional<Client> user = clientRepository.findById(id);
         if (user.isPresent()) {
-            this.notificationService.sendGreeting("{ \"email\": \"theo.foray@gmail.com\" }");
             user.get().getBankAccounts().add(account);
+            this.notificationService.sendGreeting("{ \"email\": \""+user.get().getEmail()+"\" }");
             clientRepository.save(user.get());
             return new ResponseEntity<>(account, HttpStatus.CREATED);
         }
