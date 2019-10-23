@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/creditrama?createDatabaseIfNotExist=true
+    url: jdbc:postgresql://postgres:5432/creditrama?createDatabaseIfNotExist=true
     username: postgres
     password: docker
     driver-class-name: org.postgresql.Driver
@@ -16,11 +16,18 @@ spring:
             non_contextual_creation: true
   application:
     name: profile
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers:
+            - localhost
+            - kafka
 
 security:
   oauth2:
     resource:
-      token-info-uri: http://localhost:9191/oauth/check_token
+      token-info-uri: http://login:9191/oauth/check_token
     client:
       client-id: mobile
       client-secret: pin
