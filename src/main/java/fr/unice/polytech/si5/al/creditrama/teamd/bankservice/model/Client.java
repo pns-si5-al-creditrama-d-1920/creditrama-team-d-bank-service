@@ -21,6 +21,8 @@ public class Client extends User {
     private List<BankAccount> bankAccounts;
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
     private List<BankAccount> recipients;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+    private List <BankTransaction> transactions;
 
     public Client(Integer id, String username, String password, String email, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, List<Role> roles, List<BankAccount> bankAccounts, List<BankAccount> recipients) {
         super(id, username, password, email, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, roles);

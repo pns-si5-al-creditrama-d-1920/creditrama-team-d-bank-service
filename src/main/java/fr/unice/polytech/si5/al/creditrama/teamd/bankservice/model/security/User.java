@@ -30,7 +30,7 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer userId;
 
     @Column(name = "username", unique = true)
     private String username;
@@ -49,9 +49,9 @@ public class User implements Serializable {
 
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "role_user", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+    @JoinTable(name = "role_user", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "userId")},
             inverseJoinColumns = {
-                    @JoinColumn(name = "role_id", referencedColumnName = "id")})
+                    @JoinColumn(name = "role_id", referencedColumnName = "roleId")})
     private List<Role> roles;
 
 

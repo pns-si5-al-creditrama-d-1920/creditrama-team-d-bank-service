@@ -13,13 +13,13 @@ public class Role implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer roleId;
     @Column(name = "role_name")
     private String role_name;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "permission_role", joinColumns = {
-            @JoinColumn(name = "role_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "permission_id", referencedColumnName = "id")})
+            @JoinColumn(name = "role_id", referencedColumnName = "roleId")}, inverseJoinColumns = {
+            @JoinColumn(name = "permission_id", referencedColumnName = "permissionId")})
     private List<Permission> permissions;
 }
