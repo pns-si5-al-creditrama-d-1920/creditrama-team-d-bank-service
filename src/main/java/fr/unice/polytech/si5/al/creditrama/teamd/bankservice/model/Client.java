@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @NoArgsConstructor
+@Builder
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
