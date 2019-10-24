@@ -20,5 +20,5 @@ public class BankAccount implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer bankAccountId;
 
-    private Integer balance;
+    private Double balance;
 }

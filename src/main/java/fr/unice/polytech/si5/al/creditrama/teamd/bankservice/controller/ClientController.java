@@ -48,7 +48,7 @@ public class ClientController {
         customer.setEnabled(true);
         customer.setPassword("{bcrypt}" + passwordEncoder.encode(customer.getPassword()));
         customer.setBankAccounts(new ArrayList<BankAccount>() {{
-            add(new BankAccount(0, 0));
+            add(new BankAccount(0, 0.0));
         }});
         return clientService.save(customer);
     }

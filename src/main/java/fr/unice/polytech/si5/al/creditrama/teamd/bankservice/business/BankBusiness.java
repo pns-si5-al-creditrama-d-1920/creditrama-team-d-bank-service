@@ -11,11 +11,13 @@ import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.repository.ClientRe
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Component
+@Transactional
 public class BankBusiness implements IBankBusiness {
 
     @Autowired
@@ -38,7 +40,7 @@ public class BankBusiness implements IBankBusiness {
     private BankAccount getBankAccount(Integer bankAccountId) throws BankAccountNotFoundException {
         Optional<BankAccount> account = bankAccountRepository.findById(bankAccountId);
         if (!account.isPresent()) {
-            throw new BankAccountNotFoundException(account + " doesn't exist");
+            throw new BankAccountNotFoundException(bankAccountId + " doesn't exist");
         }
         return account.get();
     }
@@ -46,7 +48,7 @@ public class BankBusiness implements IBankBusiness {
     private BankAccount getBankAccount(BankAccount bankAccount) throws BankAccountNotFoundException {
         Optional<BankAccount> account = bankAccountRepository.findById(bankAccount.getBankAccountId());
         if (!account.isPresent()) {
-            throw new BankAccountNotFoundException(account + " doesn't exist");
+            throw new BankAccountNotFoundException(bankAccount + " doesn't exist");
         }
         return account.get();
     }
@@ -65,12 +67,13 @@ public class BankBusiness implements IBankBusiness {
     @Override
     public BankAccount createClientBankAccount(Integer clientId, BankAccount account) throws ClientNotFoundException {
         Client client = getClient(clientId);
-        BankAccount newAccount = BankAccount.builder()
-                .balance(account.getBankAccountId())
+        BankAccount createdAccount = BankAccount.builder()
+                .balance(account.getBalance())
                 .build();
-        client.getBankAccounts().add(newAccount);
+        bankAccountRepository.save(createdAccount);
+        client.getBankAccounts().add(createdAccount);
         clientRepository.save(client);
-        return newAccount;
+        return createdAccount;
     }
 
     /**
@@ -100,7 +103,7 @@ public class BankBusiness implements IBankBusiness {
         account.setBalance(null);
 
         if (client.getRecipients().contains(account) || client.getBankAccounts().contains(account)) {
-            return account;
+            return null;
         }
 
         client.getRecipients().add(account);
@@ -124,8 +127,8 @@ public class BankBusiness implements IBankBusiness {
             throw new InvalidBankTransactionException("The receiver of the transaction is not is not is the sender recipients' list");
         }
 
-        Integer previousBalanceSender = sourceAccount.getBalance();
-        Integer previousBalanceReceiver = destinationAccount.getBalance();
+        Double previousBalanceSender = sourceAccount.getBalance();
+        Double previousBalanceReceiver = destinationAccount.getBalance();
 
         sourceAccount.setBalance(previousBalanceSender - transaction.getAmount());
         destinationAccount.setBalance(previousBalanceReceiver + transaction.getAmount());
