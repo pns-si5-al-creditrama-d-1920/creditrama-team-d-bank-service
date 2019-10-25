@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class ClientController {
 
@@ -48,7 +49,7 @@ public class ClientController {
         customer.setEnabled(true);
         customer.setPassword("{bcrypt}" + passwordEncoder.encode(customer.getPassword()));
         customer.setBankAccounts(new ArrayList<BankAccount>() {{
-            add(new BankAccount(0, 0));
+            add(new BankAccount(0, 100));
         }});
         return clientService.save(customer);
     }

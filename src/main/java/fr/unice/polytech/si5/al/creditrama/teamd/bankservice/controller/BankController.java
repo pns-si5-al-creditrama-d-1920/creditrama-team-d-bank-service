@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "content-type")
 @RestController
 @RequestMapping("bank")
 public class BankController {
