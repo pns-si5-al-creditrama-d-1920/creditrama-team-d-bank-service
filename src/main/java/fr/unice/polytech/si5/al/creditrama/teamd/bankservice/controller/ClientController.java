@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -38,6 +38,7 @@ public class ClientController {
     /**
      * This method do not respect REST pattern because we have to allow this route for everyone
      * So this route /register his not protected by auth
+     *
      * @param customer
      * @return
      */
@@ -48,19 +49,18 @@ public class ClientController {
         customer.setCredentialsNonExpired(true);
         customer.setEnabled(true);
         customer.setPassword("{bcrypt}" + passwordEncoder.encode(customer.getPassword()));
-        customer.setBankAccounts(new ArrayList<BankAccount>() {{
-            add(new BankAccount(0, 100.0));
-        }});
+        customer.setBankAccounts(Collections.singletonList(BankAccount.builder().balance(100.0).build()));
         return clientService.save(customer);
     }
 
     /**
      * return the current user according to his bearer token
+     *
      * @param authentication information
      * @return
      */
     @GetMapping("/clients/auth")
-    public Client getAuthClientByName(Authentication authentication){
+    public Client getAuthClientByName(Authentication authentication) {
         return clientService.fetchByName(authentication.getName());
     }
 }
