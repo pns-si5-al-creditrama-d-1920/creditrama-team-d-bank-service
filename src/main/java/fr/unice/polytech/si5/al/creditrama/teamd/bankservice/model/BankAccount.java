@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+@Builder
 @Entity
 @Data
 @NoArgsConstructor
@@ -17,6 +18,7 @@ import java.io.Serializable;
 public class BankAccount implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int bankAccountId;
-    private int balance;
+    private Integer bankAccountId;
+
+    private Double balance;
 }
