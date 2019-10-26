@@ -44,17 +44,17 @@ public interface IBankBusiness {
      * @return List of the recipients
      * @throws ClientNotFoundException if clientId is not found
      */
-    List<BankAccount> retrieveClientRecipients(Integer clientId) throws ClientNotFoundException;
+    List<Integer> retrieveClientRecipients(Integer clientId) throws ClientNotFoundException;
 
     /**
      * Create a recipient for a client
      *
-     * @param clientId             id of the client
-     * @param recipientBankAccount bank account information
+     * @param clientId               id of the client
+     * @param recipientBankAccountId id of the bank account
      * @return new recipient created
      * @throws ClientNotFoundException if clientId is not found
      */
-    BankAccount createClientRecipient(Integer clientId, BankAccount recipientBankAccount) throws ClientNotFoundException, BankAccountNotFoundException;
+    Integer createClientRecipient(Integer clientId, Integer recipientBankAccountId) throws ClientNotFoundException, BankAccountNotFoundException;
 
     /**
      * Create a transaction for a client

@@ -17,17 +17,28 @@ import java.util.List;
 @EqualsAndHashCode
 public class Client extends User {
 
-
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
     private List<BankAccount> bankAccounts;
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
-    private List<BankAccount> recipients;
+    @ElementCollection
+    private List<Integer> recipients;
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
     private List <BankTransaction> transactions;
 
-    public Client(Integer id, String username, String password, String email, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, List<Role> roles, List<BankAccount> bankAccounts, List<BankAccount> recipients) {
+    public Client(Integer id,
+                  String username,
+                  String password,
+                  String email,
+                  boolean enabled,
+                  boolean accountNonExpired,
+                  boolean credentialsNonExpired,
+                  boolean accountNonLocked,
+                  List<Role> roles,
+                  List<BankAccount> bankAccounts,
+                  List<Integer> recipients,
+                  List<BankTransaction> transactions) {
         super(id, username, password, email, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, roles);
         this.bankAccounts = bankAccounts;
         this.recipients = recipients;
+        this.transactions = transactions;
     }
 }

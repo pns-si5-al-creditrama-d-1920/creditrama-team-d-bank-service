@@ -45,14 +45,6 @@ public class BankBusiness implements IBankBusiness {
         return account.get();
     }
 
-    private BankAccount getBankAccount(BankAccount bankAccount) throws BankAccountNotFoundException {
-        Optional<BankAccount> account = bankAccountRepository.findById(bankAccount.getBankAccountId());
-        if (!account.isPresent()) {
-            throw new BankAccountNotFoundException(bankAccount + " doesn't exist");
-        }
-        return account.get();
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -89,7 +81,7 @@ public class BankBusiness implements IBankBusiness {
      * {@inheritDoc}
      */
     @Override
-    public List<BankAccount> retrieveClientRecipients(Integer clientId) throws ClientNotFoundException {
+    public List<Integer> retrieveClientRecipients(Integer clientId) throws ClientNotFoundException {
         return getClient(clientId).getRecipients();
     }
 
@@ -97,18 +89,17 @@ public class BankBusiness implements IBankBusiness {
      * {@inheritDoc}
      */
     @Override
-    public BankAccount createClientRecipient(Integer clientId, BankAccount recipientBankAccount) throws ClientNotFoundException, BankAccountNotFoundException {
+    public Integer createClientRecipient(Integer clientId, Integer recipientBankAccountId) throws ClientNotFoundException, BankAccountNotFoundException {
         Client client = getClient(clientId);
-        BankAccount account = getBankAccount(recipientBankAccount);
-        account.setBalance(null);
+        BankAccount account = getBankAccount(recipientBankAccountId);
 
-        if (client.getRecipients().contains(account) || client.getBankAccounts().contains(account)) {
+        if (client.getRecipients().contains(recipientBankAccountId) || client.getBankAccounts().contains(account)) {
             return null;
         }
 
-        client.getRecipients().add(account);
+        client.getRecipients().add(recipientBankAccountId);
         clientRepository.save(client);
-        return account;
+        return recipientBankAccountId;
     }
 
     /**
@@ -123,7 +114,7 @@ public class BankBusiness implements IBankBusiness {
         if (!client.getBankAccounts().contains(sourceAccount)) {
             throw new InvalidBankTransactionException("The sender is not the source of the transaction");
         }
-        if (!client.getRecipients().contains(destinationAccount)) {
+        if (!client.getRecipients().contains(transaction.getDestinationId())) {
             throw new InvalidBankTransactionException("The receiver of the transaction is not is not is the sender recipients' list");
         }
 

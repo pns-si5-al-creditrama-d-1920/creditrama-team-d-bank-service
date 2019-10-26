@@ -1,7 +1,9 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.bankservice;
 
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.business.BankBusiness;
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.exception.InvalidBankTransactionException;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankAccount;
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankTransaction;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.Client;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.repository.BankAccountRepository;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.repository.ClientRepository;
@@ -44,11 +46,10 @@ public class BankServiceBusinessTests {
 
     @Before
     public void setUp() {
-        clientId = 1;
-        BankAccount account = BankAccount.builder().balance(999.99).build();
+        BankAccount account = BankAccount.builder().balance(100.0).build();
         bankAccountId = bankAccountRepository.save(account).getBankAccountId();
 
-        Client client = new Client(clientId, "nathan", "password", "n@gmail.com", true, true, true, true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        Client client = new Client(null, "nathan", "password", "n@gmail.com", true, true, true, true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         client.getBankAccounts().add(account);
         clientId = clientRepository.save(client).getUserId();
     }
@@ -70,27 +71,96 @@ public class BankServiceBusinessTests {
     }
 
     @Test
-    public void recipients() throws Exception {
-        Integer clientId = 140;
+    public void manageRecipients() throws Exception {
         BankAccount account = BankAccount.builder().balance(999.99).build();
-        Integer bankAccountId = bankAccountRepository.save(account).getBankAccountId();
+        Integer expectedBankAccountId = bankAccountRepository.save(account).getBankAccountId();
 
-        Client client = new Client(clientId, "théo", "password", "n@gmail.com", true, true, true, true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        Client client = new Client(null, "théo", "password", "n@gmail.com", true, true, true, true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         client.getBankAccounts().add(account);
         client = clientRepository.save(client);
-        clientId = client.getUserId();
+        Integer clientId = client.getUserId();
 
         // Add a recipient
-        BankAccount expected = BankAccount.builder().bankAccountId(bankAccountId).balance(192000000.00).build();
-
-        BankAccount recipient = business.createClientRecipient(this.clientId, expected);
-        assertNull(recipient.getBalance());
+        Integer recipient = business.createClientRecipient(this.clientId, expectedBankAccountId);
         assertTrue(business.retrieveClientRecipients(this.clientId).contains(recipient));
 
-        recipient = business.createClientRecipient(this.clientId, expected);
+        recipient = business.createClientRecipient(this.clientId, expectedBankAccountId);
         assertNull(recipient);
 
-        recipient = business.createClientRecipient(clientId, expected);
+        recipient = business.createClientRecipient(clientId, expectedBankAccountId);
         assertNull(recipient);
+    }
+
+    @Test
+    public void transferToRecipient() throws Exception {
+        BankAccount account = BankAccount.builder().balance(1000.0).build();
+        Integer bankAccountId = bankAccountRepository.save(account).getBankAccountId();
+
+        Client client = new Client(null, "alexis", "password", "al@gmail.com", true, true, true, true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        client.getBankAccounts().add(account);
+        Integer clientId = clientRepository.save(client).getUserId();
+
+        assertEquals(100.0, bankAccountRepository.findById(this.bankAccountId).get().getBalance(), 0.01);
+        assertEquals(1000.0, bankAccountRepository.findById(bankAccountId).get().getBalance(), 0.01);
+
+        business.createClientRecipient(clientId, this.bankAccountId);
+
+        BankTransaction transaction = BankTransaction.builder()
+                .sourceId(bankAccountId)
+                .destinationId(this.bankAccountId)
+                .amount(500.0)
+                .build();
+
+        business.createClientTransaction(clientId, transaction);
+
+        assertEquals(500.0, bankAccountRepository.findById(bankAccountId).get().getBalance(), 0.01);
+        assertEquals(600.0, bankAccountRepository.findById(this.bankAccountId).get().getBalance(), 0.01);
+
+    }
+
+    @Test(expected = InvalidBankTransactionException.class)
+    public void transferToSameAccount() throws Exception {
+        BankTransaction transaction = BankTransaction.builder()
+                .sourceId(bankAccountId)
+                .destinationId(this.bankAccountId)
+                .amount(500.0)
+                .build();
+        business.createClientTransaction(clientId, transaction);
+    }
+
+    @Test(expected = InvalidBankTransactionException.class)
+    public void invalidTransaction() throws Exception {
+        BankAccount account = BankAccount.builder().balance(1000.0).build();
+        Integer bankAccountId = bankAccountRepository.save(account).getBankAccountId();
+
+        Client client = new Client(null, "alexis", "password", "al@gmail.com", true, true, true, true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        client.getBankAccounts().add(account);
+        Integer clientId = clientRepository.save(client).getUserId();
+
+        BankTransaction transaction = BankTransaction.builder()
+                .sourceId(this.bankAccountId)
+                .destinationId(bankAccountId)
+                .amount(500.0)
+                .build();
+
+        business.createClientTransaction(clientId, transaction);
+    }
+
+    @Test(expected = InvalidBankTransactionException.class)
+    public void transferToNonRecipient() throws Exception {
+        BankAccount account = BankAccount.builder().balance(1000.0).build();
+        Integer bankAccountId = bankAccountRepository.save(account).getBankAccountId();
+
+        Client client = new Client(null, "alexis", "password", "al@gmail.com", true, true, true, true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        client.getBankAccounts().add(account);
+        Integer clientId = clientRepository.save(client).getUserId();
+
+        BankTransaction transaction = BankTransaction.builder()
+                .sourceId(bankAccountId)
+                .destinationId(this.bankAccountId)
+                .amount(500.0)
+                .build();
+
+        business.createClientTransaction(clientId, transaction);
     }
 }

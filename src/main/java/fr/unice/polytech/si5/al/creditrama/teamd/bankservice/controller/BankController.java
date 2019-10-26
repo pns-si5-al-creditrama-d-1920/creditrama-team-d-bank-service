@@ -44,7 +44,7 @@ public class BankController {
     }
 
     @GetMapping("/clients/{id}/recipients")
-    public ResponseEntity<List<BankAccount>> getRecipients(@PathVariable(value = "id") Integer clientId) {
+    public ResponseEntity<List<Integer>> getRecipients(@PathVariable(value = "id") Integer clientId) {
         try {
             return new ResponseEntity<>(bankBusiness.retrieveClientRecipients(clientId), HttpStatus.OK);
         } catch (ClientNotFoundException e) {
@@ -54,9 +54,9 @@ public class BankController {
     }
 
     @PostMapping("/clients/{id}/recipients")
-    public ResponseEntity<BankAccount> addRecipient(@PathVariable(value = "id") Integer clientId, @RequestBody BankAccount recipientBankAccount) {
+    public ResponseEntity<Integer> addRecipient(@PathVariable(value = "id") Integer clientId, @RequestBody Integer recipientBankAccountId) {
         try {
-            return new ResponseEntity<>(bankBusiness.createClientRecipient(clientId, recipientBankAccount), HttpStatus.CREATED);
+            return new ResponseEntity<>(bankBusiness.createClientRecipient(clientId, recipientBankAccountId), HttpStatus.CREATED);
         } catch (ClientNotFoundException | BankAccountNotFoundException e) {
             System.err.println("POST /bank/clients/{id}/recipients : " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

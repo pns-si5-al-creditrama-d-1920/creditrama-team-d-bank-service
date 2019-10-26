@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -49,7 +49,9 @@ public class ClientController {
         customer.setCredentialsNonExpired(true);
         customer.setEnabled(true);
         customer.setPassword("{bcrypt}" + passwordEncoder.encode(customer.getPassword()));
-        customer.setBankAccounts(Collections.singletonList(BankAccount.builder().balance(100.0).build()));
+        List<BankAccount> simpleAccount = new ArrayList<>();
+        simpleAccount.add(BankAccount.builder().balance(100.0).build());
+        customer.setBankAccounts(simpleAccount);
         return clientService.save(customer);
     }
 

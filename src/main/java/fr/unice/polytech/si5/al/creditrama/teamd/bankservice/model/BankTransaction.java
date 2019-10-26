@@ -9,6 +9,7 @@ import javax.persistence.Id;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -19,5 +20,5 @@ public class BankTransaction {
     private Integer id;
     private Integer sourceId;
     private Integer destinationId;
-    private Integer amount;
+    private Double amount;
 }
