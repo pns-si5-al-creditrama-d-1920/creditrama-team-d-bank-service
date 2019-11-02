@@ -21,8 +21,8 @@ public class Client extends User {
     private List<BankAccount> bankAccounts;
     @ElementCollection
     private List<Integer> recipients;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
-    private List <BankTransaction> transactions;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
+    private List <BankTransaction> bankTransactions;
 
     public Client(Integer id,
                   String username,
@@ -35,10 +35,10 @@ public class Client extends User {
                   List<Role> roles,
                   List<BankAccount> bankAccounts,
                   List<Integer> recipients,
-                  List<BankTransaction> transactions) {
+                  List<BankTransaction> bankTransactions) {
         super(id, username, password, email, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, roles);
         this.bankAccounts = bankAccounts;
         this.recipients = recipients;
-        this.transactions = transactions;
+        this.bankTransactions = bankTransactions;
     }
 }

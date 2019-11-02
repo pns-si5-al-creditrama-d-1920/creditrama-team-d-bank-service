@@ -127,9 +127,9 @@ public class BankBusiness implements IBankBusiness {
         bankAccountRepository.save(sourceAccount);
         bankAccountRepository.save(destinationAccount);
 
-        client.getTransactions().add(transaction);
+        client.getBankTransactions().add(transaction);
         Client recipientClient = clientRepository.findByBankAccounts(destinationAccount);
-        recipientClient.getTransactions().add(transaction);
+        recipientClient.getBankTransactions().add(transaction);
 
         clientRepository.save(client);
         clientRepository.save(recipientClient);
