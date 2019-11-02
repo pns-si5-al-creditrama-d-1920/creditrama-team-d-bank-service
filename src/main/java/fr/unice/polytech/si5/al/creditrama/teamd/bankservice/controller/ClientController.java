@@ -34,6 +34,10 @@ public class ClientController {
         return clientService.fetchById(id);
     }
 
+    @DeleteMapping("/clients/{id}")
+    public void deleteUserById(@PathVariable int id) {
+        clientService.deleteById(id);
+    }
 
     /**
      * This method do not respect REST pattern because we have to allow this route for everyone

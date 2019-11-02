@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface ClientService {
 
-
     Client save(Client customer);
 
     Client fetchById(int profileId);
@@ -15,4 +14,6 @@ public interface ClientService {
     Client fetchByName(String name);
 
     List<Client> fetchAllClient();
+
+    void deleteById(int userId);
 }

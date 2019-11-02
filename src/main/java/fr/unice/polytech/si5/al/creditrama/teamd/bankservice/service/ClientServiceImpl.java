@@ -12,7 +12,7 @@ import java.util.Optional;
 public class ClientServiceImpl implements ClientService {
 
     @Autowired
-    ClientRepository customerRepository;
+    private ClientRepository customerRepository;
 
     @Override
     public Client save(Client customer) {
@@ -37,5 +37,10 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public List<Client> fetchAllClient() {
         return customerRepository.findAll();
+    }
+
+    @Override
+    public void deleteById(int userId) {
+        customerRepository.deleteById(userId);
     }
 }
