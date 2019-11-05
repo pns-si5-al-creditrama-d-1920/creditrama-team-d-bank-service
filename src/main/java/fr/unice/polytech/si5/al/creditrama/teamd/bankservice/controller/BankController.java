@@ -35,7 +35,6 @@ public class BankController {
                                                          @RequestBody BankAccount bankAccount) {
         try {
             BankAccount createdBankAccount = bankBusiness.createClientBankAccount(clientId, bankAccount);
-            bankBusiness.sendGreeting(clientId);
             return new ResponseEntity<>(createdBankAccount, HttpStatus.CREATED);
         } catch (ClientNotFoundException e) {
             System.err.println("POST /bank/clients/{id}/bank-accounts : " + e.getMessage());
@@ -66,7 +65,11 @@ public class BankController {
     @PostMapping("/clients/{id}/transactions")
     public ResponseEntity<BankTransaction> transfer(@PathVariable(value = "id") Integer clientId, @RequestBody BankTransaction transaction) {
         try {
-            return new ResponseEntity<>(bankBusiness.createClientTransaction(clientId, transaction), HttpStatus.CREATED);
+            BankTransaction createdTransaction = bankBusiness.createClientTransaction(clientId, transaction);
+            bankBusiness.sendEmail(bankBusiness.getAccount(transaction.getDestinationId()),
+                    "Bonjour,\\n Vous venez de revecoir un crédit d'un montant de " + transaction.getAmount()
+                            + "€\\n \\n Cordialement,\\n L'équipe CréditRama");
+            return new ResponseEntity<>(createdTransaction, HttpStatus.CREATED);
         } catch (ClientNotFoundException | BankAccountNotFoundException e) {
             System.err.println("POST /bank/clients/{id}/transactions : " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

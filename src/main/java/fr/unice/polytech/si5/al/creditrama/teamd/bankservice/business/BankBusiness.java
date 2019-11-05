@@ -72,9 +72,25 @@ public class BankBusiness implements IBankBusiness {
      * {@inheritDoc}
      */
     @Override
-    public void sendGreeting(Integer clientId) throws ClientNotFoundException {
+    public void sendEmail(Integer clientId, String message) throws ClientNotFoundException {
         Client client = getClient(clientId);
-        notificationService.sendGreeting("{\"email\": \"" + client.getEmail() + "\"}");
+        notificationService.sendGreeting("{\"email\": \"" + client.getEmail() + "\", \"message\": \"" + message + "\"}");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Integer getAccount(Integer bankAccountId) throws BankAccountNotFoundException {
+        List<Client> clients = clientRepository.findAll();
+        for (Client client : clients) {
+            for (BankAccount bankAccount : client.getBankAccounts()) {
+                if (bankAccount.getBankAccountId().equals(bankAccountId)) {
+                    return client.getUserId();
+                }
+            }
+        }
+        throw new BankAccountNotFoundException(bankAccountId + " doesn't exist");
     }
 
     /**

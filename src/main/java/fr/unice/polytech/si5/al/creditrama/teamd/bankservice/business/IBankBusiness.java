@@ -33,9 +33,10 @@ public interface IBankBusiness {
      * Send a greeting to the client
      *
      * @param clientId id of the client
+     * @param message
      * @throws ClientNotFoundException if clientId is not found
      */
-    void sendGreeting(Integer clientId) throws ClientNotFoundException;
+    void sendEmail(Integer clientId, String message) throws ClientNotFoundException;
 
     /**
      * Get the recipients' list of the client
@@ -65,4 +66,6 @@ public interface IBankBusiness {
      * @throws ClientNotFoundException if clientId is not found
      */
     BankTransaction createClientTransaction(Integer clientId, BankTransaction transaction) throws ClientNotFoundException, BankAccountNotFoundException, InvalidBankTransactionException;
+
+    Integer getAccount(Integer bankAccountId) throws BankAccountNotFoundException;
 }
