@@ -122,6 +122,20 @@ public class BankBusiness implements IBankBusiness {
      * {@inheritDoc}
      */
     @Override
+    public void removeRecipient(Integer clientId, Integer recipientId) throws ClientNotFoundException, BankAccountNotFoundException {
+        Client client = getClient(clientId);
+        getBankAccount(recipientId);
+        if (!client.getRecipients().contains(recipientId)) {
+            throw new BankAccountNotFoundException("The client " + clientId + " doesn't have " + recipientId + " as a recipient.");
+        }
+        client.getRecipients().remove(recipientId);
+        clientRepository.save(client);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public BankTransaction createClientTransaction(Integer clientId, BankTransaction transaction) throws ClientNotFoundException, BankAccountNotFoundException, InvalidBankTransactionException {
         Client client = getClient(clientId);
         BankAccount sourceAccount = getBankAccount(transaction.getSourceId());

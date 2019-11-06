@@ -62,6 +62,17 @@ public class BankController {
         }
     }
 
+    @DeleteMapping("/clients/{clientId}/recipients/{recipientId}")
+    public ResponseEntity deleteRecipient(@PathVariable(value = "clientId") Integer clientId, @PathVariable(value = "recipientId") Integer recipientId) {
+        try {
+            bankBusiness.removeRecipient(clientId, recipientId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ClientNotFoundException | BankAccountNotFoundException e) {
+            System.err.println("POST /bank/clients/{id}/recipients : " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/clients/{id}/transactions")
     public ResponseEntity<BankTransaction> transfer(@PathVariable(value = "id") Integer clientId, @RequestBody BankTransaction transaction) {
         try {

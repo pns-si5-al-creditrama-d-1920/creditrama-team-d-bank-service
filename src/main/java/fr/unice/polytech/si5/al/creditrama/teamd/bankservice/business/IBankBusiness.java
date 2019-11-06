@@ -67,5 +67,20 @@ public interface IBankBusiness {
      */
     BankTransaction createClientTransaction(Integer clientId, BankTransaction transaction) throws ClientNotFoundException, BankAccountNotFoundException, InvalidBankTransactionException;
 
+    /**
+     * Get the id of the client given a bank account id
+     *
+     * @param bankAccountId id of the bank account
+     * @return id of the client
+     * @throws BankAccountNotFoundException if bankAccountId is not found
+     */
     Integer getAccount(Integer bankAccountId) throws BankAccountNotFoundException;
+
+    /**
+     * Remove a recipient from a client
+     *
+     * @param clientId    id of the client
+     * @param recipientId id of the recipient (bank account)
+     */
+    void removeRecipient(Integer clientId, Integer recipientId) throws ClientNotFoundException, BankAccountNotFoundException;
 }

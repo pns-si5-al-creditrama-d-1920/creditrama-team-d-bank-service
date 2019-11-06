@@ -1,6 +1,7 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.bankservice;
 
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.business.BankBusiness;
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.exception.BankAccountNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.exception.InvalidBankTransactionException;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankTransaction;
@@ -89,6 +90,10 @@ public class BankServiceBusinessTests {
 
         recipient = business.createClientRecipient(clientId, expectedBankAccountId);
         assertNull(recipient);
+
+        // Remove a recipient
+        business.removeRecipient(this.clientId, expectedBankAccountId);
+        assertFalse(business.retrieveClientRecipients(this.clientId).contains(recipient));
     }
 
     @Test
@@ -162,5 +167,13 @@ public class BankServiceBusinessTests {
                 .build();
 
         business.createClientTransaction(clientId, transaction);
+    }
+
+    @Test(expected = BankAccountNotFoundException.class)
+    public void removeRecipientNotPresent() throws Exception {
+        BankAccount account = BankAccount.builder().balance(999.99).build();
+        Integer bankAccountId = bankAccountRepository.save(account).getBankAccountId();
+
+        business.removeRecipient(this.clientId, bankAccountId);
     }
 }
