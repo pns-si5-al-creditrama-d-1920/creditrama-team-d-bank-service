@@ -5,6 +5,7 @@ import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.exception.ClientNot
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.exception.InvalidBankTransactionException;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankTransaction;
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.Notification;
 
 import java.util.List;
 
@@ -28,15 +29,6 @@ public interface IBankBusiness {
      * @throws ClientNotFoundException if clientId is not found
      */
     BankAccount createClientBankAccount(Integer clientId, BankAccount account) throws ClientNotFoundException;
-
-    /**
-     * Send a greeting to the client
-     *
-     * @param clientId id of the client
-     * @param message
-     * @throws ClientNotFoundException if clientId is not found
-     */
-    void sendEmail(Integer clientId, String message) throws ClientNotFoundException;
 
     /**
      * Get the recipients' list of the client
@@ -83,4 +75,6 @@ public interface IBankBusiness {
      * @param recipientId id of the recipient (bank account)
      */
     void removeRecipient(Integer clientId, Integer recipientId) throws ClientNotFoundException, BankAccountNotFoundException;
+
+    void sendEmail(BankTransaction createdTransaction) throws BankAccountNotFoundException;
 }

@@ -6,6 +6,7 @@ import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.exception.ClientNot
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.exception.InvalidBankTransactionException;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankTransaction;
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,9 +78,8 @@ public class BankController {
     public ResponseEntity<BankTransaction> transfer(@PathVariable(value = "id") Integer clientId, @RequestBody BankTransaction transaction) {
         try {
             BankTransaction createdTransaction = bankBusiness.createClientTransaction(clientId, transaction);
-            bankBusiness.sendEmail(bankBusiness.getAccount(transaction.getDestinationId()),
-                    "Bonjour,\\n Vous venez de revecoir un crédit d'un montant de " + transaction.getAmount()
-                            + "€\\n \\n Cordialement,\\n L'équipe CréditRama");
+
+            bankBusiness.sendEmail(createdTransaction);
             return new ResponseEntity<>(createdTransaction, HttpStatus.CREATED);
         } catch (ClientNotFoundException | BankAccountNotFoundException e) {
             System.err.println("POST /bank/clients/{id}/transactions : " + e.getMessage());

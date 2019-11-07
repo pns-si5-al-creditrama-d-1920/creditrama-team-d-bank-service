@@ -3,31 +3,32 @@ package fr.unice.polytech.si5.al.creditrama.teamd.bankservice.business;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.exception.BankAccountNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.exception.ClientNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.exception.InvalidBankTransactionException;
-import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankAccount;
-import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankTransaction;
-import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.Client;
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.*;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.repository.BankAccountRepository;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.repository.ClientRepository;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Component
-@Transactional
+@Service
 public class BankBusiness implements IBankBusiness {
 
-    @Autowired
     private ClientRepository clientRepository;
 
-    @Autowired
     private BankAccountRepository bankAccountRepository;
 
-    @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    public BankBusiness(ClientRepository clientRepository, BankAccountRepository bankAccountRepository, NotificationService notificationService) {
+        this.clientRepository = clientRepository;
+        this.bankAccountRepository = bankAccountRepository;
+        this.notificationService = notificationService;
+    }
 
     private Client getClient(Integer clientId) throws ClientNotFoundException {
         Optional<Client> client = clientRepository.findById(clientId);
@@ -68,14 +69,6 @@ public class BankBusiness implements IBankBusiness {
         return createdAccount;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void sendEmail(Integer clientId, String message) throws ClientNotFoundException {
-        Client client = getClient(clientId);
-        notificationService.sendGreeting("{\"email\": \"" + client.getEmail() + "\", \"message\": \"" + message + "\"}");
-    }
 
     /**
      * {@inheritDoc}
@@ -130,6 +123,22 @@ public class BankBusiness implements IBankBusiness {
         }
         client.getRecipients().remove(recipientId);
         clientRepository.save(client);
+    }
+
+    @Override
+    public void sendEmail(BankTransaction createdTransaction) throws BankAccountNotFoundException {
+        System.out.println(createdTransaction);
+        Client dest = clientRepository.findById(getAccount(createdTransaction.getDestinationId())).orElseThrow(IllegalArgumentException::new);
+        //TODO SEND EMAIL TO CREATOR
+        Notification notification = new Notification();
+        notification.setType("EMAIL");
+        notification.setAction("TRANSFER");
+        notification.setTo(new ArrayList<>());
+        notification.getTo().add(dest.getEmail());
+        notification.setParams(new ArrayList<>());
+        notification.getParams().add(new NotificationMetaData("username", dest.getUsername()));
+        notification.getParams().add(new NotificationMetaData("amount", createdTransaction.getAmount()+""));
+        notificationService.sendMail(notification);
     }
 
     /**
