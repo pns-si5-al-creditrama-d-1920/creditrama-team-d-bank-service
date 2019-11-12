@@ -1,4 +1,4 @@
-package com.unice.polytech.creditrama.teamd.bankservice.config;
+package fr.unice.polytech.si5.al.creditrama.teamd.bankservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,9 +30,8 @@ public class SwaggerDocumentationConfig implements WebMvcConfigurer {
     public Docket customImplementation() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.unice.polytech.creditrama.teamd.bankservice"))
+                .apis(RequestHandlerSelectors.basePackage("fr.unice.polytech.si5.al.creditrama.teamd.bankservice"))
                 .build()
                 .apiInfo(apiInfo());
     }
-
 }
