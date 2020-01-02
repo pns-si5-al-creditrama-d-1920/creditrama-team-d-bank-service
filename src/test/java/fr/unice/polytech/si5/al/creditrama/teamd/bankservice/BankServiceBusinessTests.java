@@ -8,6 +8,7 @@ import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankTransacti
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.Client;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.repository.BankAccountRepository;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.repository.ClientRepository;
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.service.ClientService;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.service.NotificationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +41,9 @@ public class BankServiceBusinessTests {
     private ClientRepository clientRepository;
 
     @Autowired
+    private ClientService clientService;
+
+    @Autowired
     private BankAccountRepository bankAccountRepository;
 
     private Integer clientId;
@@ -47,12 +51,10 @@ public class BankServiceBusinessTests {
 
     @Before
     public void setUp() {
-        BankAccount account = BankAccount.builder().balance(100.0).build();
-        bankAccountId = bankAccountRepository.save(account).getBankAccountId();
-
         Client client = new Client(null, "nathan", "password", "n@gmail.com", true, true, true, true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        client.getBankAccounts().add(account);
-        clientId = clientRepository.save(client).getUserId();
+        client = clientService.save(client);
+        clientId = client.getUserId();
+        bankAccountId = client.getBankAccounts().get(0).getBankAccountId();
     }
 
     @Test
@@ -101,9 +103,9 @@ public class BankServiceBusinessTests {
         BankAccount account = BankAccount.builder().balance(1000.0).build();
         Integer bankAccountId = bankAccountRepository.save(account).getBankAccountId();
 
-        Client client = new Client(null, "alexis", "password", "al@gmail.com", true, true, true, true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        Client client = new Client(new Integer(0), "alexis", "password", "al@gmail.com", true, true, true, true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         client.getBankAccounts().add(account);
-        Integer clientId = clientRepository.save(client).getUserId();
+        Integer clientId = clientService.save(client).getUserId();
 
         assertEquals(100.0, bankAccountRepository.findById(this.bankAccountId).get().getBalance(), 0.01);
         assertEquals(1000.0, bankAccountRepository.findById(bankAccountId).get().getBalance(), 0.01);

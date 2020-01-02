@@ -5,6 +5,8 @@ import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.security.User
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -18,11 +20,17 @@ import java.util.List;
 public class Client extends User {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
-    private List<BankAccount> bankAccounts;
+    private List<BankAccount> bankAccounts = new ArrayList<>();
     @ElementCollection
     private List<Integer> recipients;
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
     private List <BankTransaction> bankTransactions;
+
+    @ManyToOne(optional = false)
+    private Bank bank;
+
+    @Column(nullable = false, unique = true)
+    private String iban;
 
     public Client(Integer id,
                   String username,

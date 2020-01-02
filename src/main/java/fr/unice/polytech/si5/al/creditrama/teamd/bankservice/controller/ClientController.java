@@ -1,8 +1,12 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.bankservice.controller;
 
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.Bank;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.Client;
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.service.BankService;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.service.ClientService;
+import org.iban4j.CountryCode;
+import org.iban4j.Iban;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,12 +20,10 @@ import java.util.List;
 public class ClientController {
 
     private ClientService clientService;
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ClientController(ClientService clientService, PasswordEncoder passwordEncoder) {
+    public ClientController(ClientService clientService) {
         this.clientService = clientService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/clients")
@@ -48,14 +50,6 @@ public class ClientController {
      */
     @PostMapping("/register")
     public Client addUser(@RequestBody Client customer) {
-        customer.setAccountNonExpired(true);
-        customer.setAccountNonLocked(true);
-        customer.setCredentialsNonExpired(true);
-        customer.setEnabled(true);
-        customer.setPassword("{bcrypt}" + passwordEncoder.encode(customer.getPassword()));
-        List<BankAccount> simpleAccount = new ArrayList<>();
-        simpleAccount.add(BankAccount.builder().balance(100.0).build());
-        customer.setBankAccounts(simpleAccount);
         return clientService.save(customer);
     }
 
