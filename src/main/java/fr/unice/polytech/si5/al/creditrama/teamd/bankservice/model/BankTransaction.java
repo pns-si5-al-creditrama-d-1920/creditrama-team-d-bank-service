@@ -17,8 +17,8 @@ import javax.persistence.Id;
 public class BankTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer bankTransactionId;
-    private Integer sourceId;
-    private Integer destinationId;
+    private Long bankTransactionId;
+    private String ibanSource;
+    private String ibanDestination;
     private Double amount;
 }

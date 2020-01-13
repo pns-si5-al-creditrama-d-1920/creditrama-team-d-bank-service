@@ -2,23 +2,33 @@ package fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.io.Serializable;
+import javax.persistence.ElementCollection;
+import java.util.Set;
 
 @Builder
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class BankAccount implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer bankAccountId;
+public class BankAccount {
 
     private Double balance;
+
+    private String iban;
+
+    private String bankCode;
+
+    private long client;
+
+    @ElementCollection
+    private Set<String> creditors;
+
+    public void addMoney(double amount) {
+        this.balance += amount;
+    }
+
+    public void removeMoney(double amount) {
+        this.balance -= amount;
+    }
 }

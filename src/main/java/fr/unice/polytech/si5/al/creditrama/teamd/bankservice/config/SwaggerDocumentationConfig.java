@@ -26,6 +26,7 @@ public class SwaggerDocumentationConfig implements WebMvcConfigurer {
                 .version("1.0.0")
                 .build();
     }
+
     @Bean
     public Docket customImplementation() {
         return new Docket(DocumentationType.SWAGGER_2)

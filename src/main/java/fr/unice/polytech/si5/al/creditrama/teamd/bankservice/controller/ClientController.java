@@ -1,18 +1,14 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.bankservice.controller;
 
-import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.Bank;
-import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.BankAccount;
+import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.exception.ClientNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.model.Client;
-import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.service.BankService;
 import fr.unice.polytech.si5.al.creditrama.teamd.bankservice.service.ClientService;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -32,8 +28,12 @@ public class ClientController {
     }
 
     @GetMapping("/clients/{id}")
-    public Client getUserById(@PathVariable int id) {
-        return clientService.fetchById(id);
+    public ResponseEntity<Client> getUserById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(clientService.fetchById(id));
+        } catch (ClientNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("/clients/{id}")
