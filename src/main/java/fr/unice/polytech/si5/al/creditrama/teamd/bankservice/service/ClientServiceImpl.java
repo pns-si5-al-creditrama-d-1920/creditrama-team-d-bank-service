@@ -92,8 +92,17 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void addRecipient(int id, String iban) throws ClientNotFoundException, BankAccountNotFoundException {
-
+    public BankAccount addRecipient(int id, String iban) throws ClientNotFoundException, BankAccountNotFoundException {
+        Client client = fetchById(id);
+        BankAccount bankAccountByIban = bankAccountClient.getBankAccount(iban);
+        System.out.println(bankAccountByIban);
+        if (bankAccountByIban != null && bankAccountByIban.getIban().equals(iban)) {
+            client.getRecipients().add(iban);
+            customerRepository.save(client);
+            return bankAccountByIban;
+        } else {
+            throw new BankAccountNotFoundException("Bank account with iban " + iban + " not found.");
+        }
     }
 
     /**
