@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>fr.unice.polytech.si5.al.creditrama.teamd</groupId>
-    <artifactId>bankservice</artifactId>
+    <artifactId>clientservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>bank-service</name>
-    <description>BankService</description>
+    <name>client-service</name>
+    <description>ClientService</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -201,7 +201,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <repository>creditrama-d-bank-service</repository>
+                            <repository>creditrama-d-client-service</repository>
                             <tag>${project.version}</tag>
                             <buildArgs>
                                 <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
