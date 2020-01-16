@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @ActiveProfiles("disable-kafka")
 @Transactional
-public class BankServiceBusinessNOP {
+public class ClientServiceBusinessNOP {
 
 
     @MockBean

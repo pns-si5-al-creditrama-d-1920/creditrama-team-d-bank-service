@@ -17,7 +17,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @SpringBootApplication
 @EnableJpaRepositories
 @EnableFeignClients
-public class BankServiceApplication implements CommandLineRunner {
+public class ClientServiceApplication implements CommandLineRunner {
 
     @Autowired
     private BankService bankService;
@@ -26,7 +26,7 @@ public class BankServiceApplication implements CommandLineRunner {
     private ClientService clientService;
 
     public static void main(String[] args) {
-        SpringApplication.run(BankServiceApplication.class, args);
+        SpringApplication.run(ClientServiceApplication.class, args);
     }
 
     @Override
