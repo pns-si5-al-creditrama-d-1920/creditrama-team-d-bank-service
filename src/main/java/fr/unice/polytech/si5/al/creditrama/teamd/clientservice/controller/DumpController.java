@@ -1,6 +1,6 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.controller;
 
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.Client;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.Client;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.repository.client.ClientRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

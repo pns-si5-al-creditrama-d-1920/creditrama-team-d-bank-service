@@ -1,6 +1,7 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.Client;
 import lombok.*;
 
 import javax.persistence.*;

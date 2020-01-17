@@ -2,13 +2,11 @@ package fr.unice.polytech.si5.al.creditrama.teamd.clientservice;
 
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.repository.client.ClientRepository;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.ClientService;
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.NotificationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ClientServiceBusinessNOP {
 
-
-    @MockBean
-    private NotificationService service;
 
     @Autowired
     private ClientRepository clientRepository;

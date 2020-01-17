@@ -7,7 +7,8 @@ import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ErrorWh
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.Bank;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccountRequest;
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.Client;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.Client;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.RecipientAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.repository.client.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,12 +47,12 @@ public class ClientServiceImpl implements ClientService {
         Bank bank = bankService.getCurrentBank().get();
         customer.setBank(bank);
         customer = customerRepository.save(customer);
-        try{
+        try {
             BankAccount account = bankAccountClient.createAccount(customer.getUserId(), BankAccountRequest.builder().amount(100d).build());
             customer.getBankAccounts().add(account.getIban());
             customer.setBank(bank);
             return customerRepository.save(customer);
-        }catch (Exception e){
+        } catch (Exception e) {
             customerRepository.deleteById(customer.getUserId());
             e.printStackTrace();
             throw new ErrorWhenCreatingClient();
@@ -59,7 +60,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client fetchById(int profileId) throws ClientNotFoundException {
+    public Client fetchById(long profileId) throws ClientNotFoundException {
         Optional<Client> customer = customerRepository.findById(profileId);
         if (customer.isPresent()) {
             return customer.get();
@@ -79,12 +80,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void deleteById(int userId) {
+    public void deleteById(long userId) {
         customerRepository.deleteById(userId);
     }
 
     @Override
-    public void createAccount(int id) throws ClientNotFoundException {
+    public void createAccount(long id) throws ClientNotFoundException {
         if (customerRepository.existsById(id))
             bankAccountClient.createAccount(id, BankAccountRequest.builder().amount(0).build());
         else
@@ -92,12 +93,17 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public BankAccount addRecipient(int id, String iban) throws ClientNotFoundException, BankAccountNotFoundException {
+    public BankAccount addRecipient(long id, String iban) throws ClientNotFoundException, BankAccountNotFoundException {
         Client client = fetchById(id);
         BankAccount bankAccountByIban = bankAccountClient.getBankAccount(iban);
-        System.out.println(bankAccountByIban);
-        if (bankAccountByIban != null && bankAccountByIban.getIban().equals(iban)) {
-            client.getRecipients().add(iban);
+        Client recipient = fetchById(bankAccountByIban.getClient());
+        if (bankAccountByIban.getIban().equals(iban)) {
+            client.getRecipients().add(RecipientAccount.builder()
+                    .client(bankAccountByIban.getClient())
+                    .firstName(recipient.getFirstName())
+                    .lastName(recipient.getLastName())
+                    .iban(bankAccountByIban.getIban())
+                    .build());
             customerRepository.save(client);
             return bankAccountByIban;
         } else {
@@ -119,11 +125,12 @@ public class ClientServiceImpl implements ClientService {
      **/
 
     @Override
-    public void removeRecipient(Integer clientId, String recipientId) throws ClientNotFoundException {
+    public void removeRecipient(long clientId, String recipientId) throws ClientNotFoundException {
         Client client = fetchById(clientId);
         client.getRecipients().removeIf(v -> v.equals(recipientId));
         customerRepository.save(client);
     }
+
 
     @Override
     public void initAdmin(String password) {
@@ -134,6 +141,8 @@ public class ClientServiceImpl implements ClientService {
             customer.setAccountNonLocked(true);
             customer.setCredentialsNonExpired(true);
             customer.setEnabled(true);
+            customer.setFirstName("admin");
+            customer.setLastName("admin");
             customer.setPassword("{bcrypt}" + passwordEncoder.encode(password));
             Bank bank = bankService.getCurrentBank().get();
             customer.setBank(bank);

@@ -1,7 +1,7 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.controller;
 
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ClientNotFoundException;
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.Client;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.Client;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

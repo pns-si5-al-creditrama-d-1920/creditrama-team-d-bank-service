@@ -2,15 +2,17 @@ package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.controller;
 
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.BankAccountNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ClientNotFoundException;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.RecipientAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*", allowedHeaders = "content-type")
 @RestController
-@RequestMapping("/bank")
 public class BankController {
     private final ClientService clientService;
 
@@ -40,6 +42,11 @@ public class BankController {
             System.err.println("POST /bank/clients/{id}/recipients : " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/clients/{id}/recipients")
+    public List<RecipientAccount> getRecipient(@PathVariable(value = "id") int clientId) throws ClientNotFoundException {
+            return clientService.fetchById(clientId).getRecipients();
     }
 
     @DeleteMapping("/clients/{clientId}/recipients/{recipientId}")
