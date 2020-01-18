@@ -12,7 +12,7 @@ public interface BankAccountClient {
     BankAccount getBankAccount(@PathVariable("iban") String iban);
 
     @PostMapping("/clients/{clientId}/accounts/")
-    public BankAccount createAccount(@PathVariable long clientId, @RequestBody BankAccountRequest bankAccountRequest);
+    BankAccount createAccount(@PathVariable long clientId, @RequestBody BankAccountRequest bankAccountRequest);
 
     @PatchMapping("/accounts/")
     BankAccount updateBanAccount(@PathVariable String iban, @RequestParam double balance);

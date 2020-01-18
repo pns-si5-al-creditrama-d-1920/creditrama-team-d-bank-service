@@ -1,45 +1,71 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.clientservice;
 
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.repository.client.ClientRepository;
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.ClientService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.Bank;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.repository.BankRepository;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.BankService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-@RunWith(SpringRunner.class)
+import java.util.ArrayList;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(initializers = PropertyOverrideContextInitializer.class)
 @ActiveProfiles("disable-kafka")
 @Transactional
-public class ClientServiceBusinessNOP {
-
-
-    @Autowired
-    private ClientRepository clientRepository;
+public class BankServiceTests {
 
     @Autowired
-    private ClientService clientService;
-    private Integer clientId;
-    private String bankAccountId;
+    private BankService bankService;
+    @Autowired
+    private BankRepository repository;
 
-    @Before
+    private Bank bank;
+
+    @BeforeEach
     public void setUp() {
-        /**
-         Client client = new Client(null, "nathan", "password", "n@gmail.com", true, true, true, true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-         client = clientService.save(client);
-         clientId = client.getUserId();
-         bankAccountId = client.getBankAccounts().get(0).getAccountNumber();
-         **/
+        bank = Bank.builder()
+                .bankCode(22041L)
+                .bankName("CreditRama")
+                .bic("CREDFRPPXXX")
+                .countryCode("FR")
+                .clients(new ArrayList<>())
+                .build();
     }
 
     @Test
-    public void test() {
-        System.out.println("coucou");
+    public void bankIsInit() {
+        assertTrue(bankService.haveBank());
+        assertTrue(bankService.getCurrentBank().isPresent());
+        assertEquals(bank.getBankCode(), bankService.getCurrentBank().get().getBankCode());
+        assertEquals(bank.getBankName(), bankService.getCurrentBank().get().getBankName());
+        assertEquals(bank.getBic(), bankService.getCurrentBank().get().getBic());
+        assertEquals(bank.getCountryCode(), bankService.getCurrentBank().get().getCountryCode());
     }
+
+    @Test
+    public void createBank() {
+        bank.setBankCode(22042L);
+        assertEquals(Optional.empty(), repository.findById(bank.getBankCode()));
+        assertNotEquals(bank.getBankCode(), bankService.getCurrentBank().get().getBankCode());
+
+        bankService.createBank(bank);
+        assertEquals(Optional.of(bank), repository.findById(bank.getBankCode()));
+
+        assertNotEquals(bank.getBankCode(), bankService.getCurrentBank().get().getBankCode());
+        assertNotEquals(bank, bankService.getCurrentBank().get());
+    }
+
 /**
  @Test public void manageBankAccountsOfClient() throws Exception {
  BankAccount expected = BankAccount.builder().balance(500.0).build();

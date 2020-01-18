@@ -111,26 +111,12 @@ public class ClientServiceImpl implements ClientService {
         }
     }
 
-    /**
-     * @Override public void addRecipient(int id, String iban) throws ClientNotFoundException, BankAccountNotFoundException {
-     * Client client = fetchById(id);
-     * Optional<BankAccount> bankAccountByIban = bankAccountClient.getBankAccountByIban(iban);
-     * if (bankAccountByIban.isPresent()) {
-     * client.getRecipients().add(bankAccountByIban.get());
-     * customerRepository.save(client);
-     * } else {
-     * throw new BankAccountNotFoundException("Bank account with iban " + iban + " not found.");
-     * }
-     * }
-     **/
-
     @Override
-    public void removeRecipient(long clientId, String recipientId) throws ClientNotFoundException {
+    public void removeRecipient(long clientId, String iban) throws ClientNotFoundException {
         Client client = fetchById(clientId);
-        client.getRecipients().removeIf(v -> v.equals(recipientId));
+        client.getRecipients().removeIf(v -> v.getIban().equals(iban));
         customerRepository.save(client);
     }
-
 
     @Override
     public void initAdmin(String password) {

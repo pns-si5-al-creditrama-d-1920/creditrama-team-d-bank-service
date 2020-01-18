@@ -25,7 +25,7 @@ public interface ClientService {
 
     BankAccount addRecipient(long id, String iban) throws ClientNotFoundException, BankAccountNotFoundException;
 
-    void removeRecipient(long clientId, String recipientId) throws ClientNotFoundException;
+    void removeRecipient(long clientId, String iban) throws ClientNotFoundException;
 
     void initAdmin(String password);
 }
