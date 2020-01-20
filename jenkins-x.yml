@@ -1,1 +1,9 @@
 buildPack: maven
+pipelineConfig:
+  pipelines:
+    overrides:
+      - pipeline: release
+        stage: promote
+        name: jx-promote
+        step:
+          sh: jx promote -b -e github-alexis --timeout 1h --version \$(cat ../../VERSION)
