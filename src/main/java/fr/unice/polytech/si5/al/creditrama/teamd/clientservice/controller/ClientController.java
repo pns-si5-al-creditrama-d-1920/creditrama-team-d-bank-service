@@ -1,14 +1,14 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.controller;
 
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccount;
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.Client;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ClientNotFoundException;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.Client;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -16,12 +16,10 @@ import java.util.List;
 public class ClientController {
 
     private ClientService clientService;
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ClientController(ClientService clientService, PasswordEncoder passwordEncoder) {
+    public ClientController(ClientService clientService) {
         this.clientService = clientService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/clients")
@@ -30,8 +28,12 @@ public class ClientController {
     }
 
     @GetMapping("/clients/{id}")
-    public Client getUserById(@PathVariable int id) {
-        return clientService.fetchById(id);
+    public ResponseEntity<Client> getUserById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(clientService.fetchById(id));
+        } catch (ClientNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("/clients/{id}")
@@ -48,14 +50,6 @@ public class ClientController {
      */
     @PostMapping("/register")
     public Client addUser(@RequestBody Client customer) {
-        customer.setAccountNonExpired(true);
-        customer.setAccountNonLocked(true);
-        customer.setCredentialsNonExpired(true);
-        customer.setEnabled(true);
-        customer.setPassword("{bcrypt}" + passwordEncoder.encode(customer.getPassword()));
-        List<BankAccount> simpleAccount = new ArrayList<>();
-        simpleAccount.add(BankAccount.builder().balance(100.0).build());
-        customer.setBankAccounts(simpleAccount);
         return clientService.save(customer);
     }
 
