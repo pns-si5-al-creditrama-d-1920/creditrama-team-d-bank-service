@@ -2,6 +2,7 @@ package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.controller;
 
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.BankAccountNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ClientNotFoundException;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.RecipientAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,9 @@ public class BankController {
 
 
     @PostMapping("/clients/{id}/recipients")
-    public ResponseEntity<Void> addRecipient(@PathVariable(value = "id") int clientId, @RequestBody String recipientBankAccountId) {
+    public ResponseEntity<BankAccount> addRecipient(@PathVariable(value = "id") int clientId, @RequestBody String recipientBankAccountId) {
         try {
-            clientService.addRecipient(clientId, recipientBankAccountId);
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(clientService.addRecipient(clientId, recipientBankAccountId), HttpStatus.CREATED);
         } catch (ClientNotFoundException | BankAccountNotFoundException e) {
             System.err.println("POST /bank/clients/{id}/recipients : " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
