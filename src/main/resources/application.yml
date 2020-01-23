@@ -8,7 +8,7 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         jdbc:
@@ -31,4 +31,4 @@ security:
     client:
       client-id: mobile
       client-secret: pin
-service.bankaccount: http://${BANKACCOUNT_HOST:localhost}:${BANKACCOUNT_PORT:9191}/
+service.bankaccount: http://${BANKACCOUNT_HOST:localhost}:${BANKACCOUNT_PORT:8083}
