@@ -1,5 +1,6 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.client;
 
+import feign.Logger;
 import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.security.oauth2.client.feign.OAuth2FeignRequestInterceptor;
@@ -20,6 +21,10 @@ class FeignConfiguration {
     @Value("${security.oauth2.client.client-secret}")
     private String clientSecret;
 
+    @Bean
+    Logger.Level feignLoggerLevel() {
+        return Logger.Level.FULL;
+    }
 
     @Bean
     RequestInterceptor oauth2FeignRequestInterceptor() {
