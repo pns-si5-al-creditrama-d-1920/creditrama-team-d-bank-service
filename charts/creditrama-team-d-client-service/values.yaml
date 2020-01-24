@@ -17,7 +17,7 @@ env:
   KAFKA_BROKER: "kafka-kafka-brokers.kafka.svc"
   AUTHORIZATION_HOST: "creditrama-team-d-authorization-service.al-team-d.svc"
   AUTHORIZATION_PORT: "8080"
-  BANKACCOUNT_HOST: "creditrama-team-d-bankaccount-service.al-team-d.svc"
+  BANKACCOUNT_HOST: "http://creditrama-team-d-bankaccount-service-al-team-d.apps.jboss.team/"
   BANKACCOUNT_PORT: "8080"
 
 # enable this flag to use knative serve to deploy the app

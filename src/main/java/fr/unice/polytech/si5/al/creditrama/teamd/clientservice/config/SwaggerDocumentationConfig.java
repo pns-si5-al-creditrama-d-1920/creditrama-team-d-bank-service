@@ -18,8 +18,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerDocumentationConfig implements WebMvcConfigurer {
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("BankService API")
-                .description("API for the BankManagement")
+                .title("Client service API")
+                .description("API for the Client management")
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
                 .termsOfServiceUrl("")
@@ -31,7 +31,7 @@ public class SwaggerDocumentationConfig implements WebMvcConfigurer {
     public Docket customImplementation() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("fr.unice.polytech.si5.al.creditrama.teamd.bankservice"))
+                .apis(RequestHandlerSelectors.basePackage("fr.unice.polytech.si5.al.creditrama.teamd.clientservice"))
                 .build()
                 .apiInfo(apiInfo());
     }

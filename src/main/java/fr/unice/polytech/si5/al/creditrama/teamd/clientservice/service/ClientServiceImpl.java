@@ -1,5 +1,6 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service;
 
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.ClientServiceApplication;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.client.BankAccountClient;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.BankAccountNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ClientNotFoundException;
@@ -10,6 +11,7 @@ import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccount
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.Client;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.RecipientAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.repository.client.ClientRepository;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -54,7 +56,7 @@ public class ClientServiceImpl implements ClientService {
             return customerRepository.save(customer);
         } catch (Exception e) {
             customerRepository.deleteById(customer.getUserId());
-            e.printStackTrace();
+            ClientServiceApplication.LOGGER.info(e.getMessage());
             throw new ErrorWhenCreatingClient();
         }
     }

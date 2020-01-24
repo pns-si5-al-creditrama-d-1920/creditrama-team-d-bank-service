@@ -5,6 +5,8 @@ import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.BankServi
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.ClientService;
 import org.iban4j.BicFormatException;
 import org.iban4j.BicUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +20,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableJpaRepositories
 @EnableFeignClients
 public class ClientServiceApplication implements CommandLineRunner {
+
+    public static final Logger LOGGER= LoggerFactory.getLogger(ClientServiceApplication.class);
 
     @Autowired
     private BankService bankService;
