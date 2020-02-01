@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:creditrama_client}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:docker}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  application:
+    name: profile
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers:
+            - ${KAFKA_BROKER:localhost}
+security:
+  oauth2:
+    resource:
+      access-token-uri: ${AUTHORIZATION_HOST:http://localhost:9191}/oauth/token
+      token-info-uri: ${AUTHORIZATION_HOST:http://localhost:9191}/oauth/check_token
+    client:
+      client-id: mobile
+      client-secret: pin
+service.bankaccount: ${BANKACCOUNT_HOST:http://localhost:8083}
