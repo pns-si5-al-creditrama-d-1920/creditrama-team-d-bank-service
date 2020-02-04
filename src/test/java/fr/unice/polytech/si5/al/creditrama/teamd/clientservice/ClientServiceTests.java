@@ -6,7 +6,7 @@ import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ClientN
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.Client;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.RecipientAccount;
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.security.User;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.security.User;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.repository.client.ClientRepository;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.BankService;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.ClientService;

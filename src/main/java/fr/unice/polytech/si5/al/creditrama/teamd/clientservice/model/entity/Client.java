@@ -2,7 +2,7 @@ package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity;
 
 
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.Bank;
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.security.User;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.security.User;
 import lombok.*;
 
 import javax.persistence.*;

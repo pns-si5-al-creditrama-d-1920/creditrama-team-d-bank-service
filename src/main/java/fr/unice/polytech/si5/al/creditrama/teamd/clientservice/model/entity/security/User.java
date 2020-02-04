@@ -1,4 +1,4 @@
-package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.security;
+package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
