@@ -31,4 +31,6 @@ security:
     client:
       client-id: mobile
       client-secret: pin
-service.bankaccount: http://${BANKACCOUNT_HOST:localhost}:8083/
+service:
+  bankaccount: http://${BANKACCOUNT_HOST:localhost}:8083/
+  card: http://${CARD_HOST:localhost}:8085/

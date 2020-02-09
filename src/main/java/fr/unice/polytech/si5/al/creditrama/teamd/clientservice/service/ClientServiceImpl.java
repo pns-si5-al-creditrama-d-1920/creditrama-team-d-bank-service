@@ -85,9 +85,9 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void createAccount(long id) throws ClientNotFoundException {
+    public BankAccount createAccount(long id) throws ClientNotFoundException {
         if (customerRepository.existsById(id))
-            bankAccountClient.createAccount(id, BankAccountRequest.builder().amount(0).build());
+            return bankAccountClient.createAccount(id, BankAccountRequest.builder().amount(0).build());
         else
             throw new ClientNotFoundException("Client with id " + id + " not found");
     }

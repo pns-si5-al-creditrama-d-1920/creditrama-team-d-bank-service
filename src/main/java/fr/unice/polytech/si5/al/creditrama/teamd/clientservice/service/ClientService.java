@@ -21,7 +21,7 @@ public interface ClientService {
 
     void deleteById(long userId);
 
-    void createAccount(long id) throws ClientNotFoundException;
+    BankAccount createAccount(long id) throws ClientNotFoundException;
 
     BankAccount addRecipient(long id, String iban) throws ClientNotFoundException, BankAccountNotFoundException;
 
