@@ -1,9 +1,11 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.clientservice;
 
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.client.BankAccountClient;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.client.CardClient;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.BankAccountNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ClientNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccount;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.Card;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.Client;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.RecipientAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.security.User;
@@ -38,6 +40,9 @@ public class ClientServiceTests {
     @MockBean
     private BankAccountClient bankAccountClient;
 
+    @MockBean
+    private CardClient cardClient;
+
     @Autowired
     private BankService bankService;
 
@@ -65,7 +70,9 @@ public class ClientServiceTests {
                 .iban("FR8750")
                 .bankCode(String.valueOf(bankService.getCurrentBank().get().getBankCode()))
                 .build();
+        Card expectedCard = Card.builder().number(42L).build();
         when(bankAccountClient.createAccount(anyLong(), any())).thenReturn(expectedAccount);
+        when(cardClient.createCard(any())).thenReturn(expectedCard);
 
         Client expectedClient = clientService.save((Client) client);
 
@@ -89,7 +96,9 @@ public class ClientServiceTests {
                 .iban("FR8750")
                 .bankCode(String.valueOf(bankService.getCurrentBank().get().getBankCode()))
                 .build();
+        Card expectedCard = Card.builder().number(42L).build();
         when(bankAccountClient.createAccount(anyLong(), any())).thenReturn(expectedAccount);
+        when(cardClient.createCard(any())).thenReturn(expectedCard);
 
         assertThrows(ClientNotFoundException.class, () -> clientService.createAccount(client.getUserId()));
 
@@ -108,7 +117,9 @@ public class ClientServiceTests {
                 .iban("FR8750")
                 .bankCode(String.valueOf(bankService.getCurrentBank().get().getBankCode()))
                 .build();
+        Card expectedCard = Card.builder().number(42L).build();
         when(bankAccountClient.createAccount(anyLong(), any())).thenReturn(expectedAccount);
+        when(cardClient.createCard(any())).thenReturn(expectedCard);
 
         Client currentClient = clientService.save((Client) client);
         clientService.createAccount(currentClient.getUserId());
