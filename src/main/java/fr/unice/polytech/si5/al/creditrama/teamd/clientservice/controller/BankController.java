@@ -1,8 +1,11 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.controller;
 
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.client.CardClient;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.BankAccountNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ClientNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccount;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccountInformation;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.Client;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.RecipientAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +21,15 @@ public class BankController {
     private final ClientService clientService;
 
     @Autowired
-    public BankController(ClientService clientService) {
+    public BankController(ClientService clientService, CardClient cardClient) {
         this.clientService = clientService;
     }
-
 
     @PostMapping("/clients/{id}/bank-accounts")
     public ResponseEntity<Void> createBankAccount(@PathVariable(value = "id") Integer clientId) {
         try {
-            clientService.createAccount(clientId);
+            BankAccount createdAccount = clientService.createAccount(clientId);
+            Client client = clientService.fetchById(clientId);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (ClientNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -46,7 +49,7 @@ public class BankController {
 
     @GetMapping("/clients/{id}/recipients")
     public List<RecipientAccount> getRecipient(@PathVariable(value = "id") int clientId) throws ClientNotFoundException {
-            return clientService.fetchById(clientId).getRecipients();
+        return clientService.fetchById(clientId).getRecipients();
     }
 
     @DeleteMapping("/clients/{clientId}/recipients/{recipientId}")

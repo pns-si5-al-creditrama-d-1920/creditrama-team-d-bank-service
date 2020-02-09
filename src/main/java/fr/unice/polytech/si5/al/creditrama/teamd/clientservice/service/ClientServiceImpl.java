@@ -2,12 +2,11 @@ package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service;
 
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.ClientServiceApplication;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.client.BankAccountClient;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.client.CardClient;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.BankAccountNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ClientNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ErrorWhenCreatingClient;
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.Bank;
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccount;
-import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccountRequest;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.*;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.Client;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.RecipientAccount;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.repository.client.ClientRepository;
@@ -31,12 +30,15 @@ public class ClientServiceImpl implements ClientService {
 
     private BankAccountClient bankAccountClient;
 
+    private CardClient cardClient;
+
     @Autowired
-    public ClientServiceImpl(ClientRepository customerRepository, PasswordEncoder passwordEncoder, BankService bankService, BankAccountClient bankAccountClient) {
+    public ClientServiceImpl(ClientRepository customerRepository, PasswordEncoder passwordEncoder, BankService bankService, BankAccountClient bankAccountClient, CardClient cardClient) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.bankService = bankService;
         this.bankAccountClient = bankAccountClient;
+        this.cardClient = cardClient;
     }
 
     @Override
@@ -53,6 +55,12 @@ public class ClientServiceImpl implements ClientService {
             BankAccount account = bankAccountClient.createAccount(customer.getUserId(), BankAccountRequest.builder().amount(100d).build());
             customer.getBankAccounts().add(account.getIban());
             customer.setBank(bank);
+            Card card = cardClient.createCard(BankAccountInformation.builder()
+                    .iban(account.getIban())
+                    .firstName(customer.getFirstName())
+                    .lastName(customer.getLastName())
+                    .build());
+            bankAccountClient.addCard(account.getIban(), CardRequest.builder().number(card.getNumber()).build());
             return customerRepository.save(customer);
         } catch (Exception e) {
             customerRepository.deleteById(customer.getUserId());
@@ -87,9 +95,9 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void createAccount(long id) throws ClientNotFoundException {
+    public BankAccount createAccount(long id) throws ClientNotFoundException {
         if (customerRepository.existsById(id))
-            bankAccountClient.createAccount(id, BankAccountRequest.builder().amount(0).build());
+            return bankAccountClient.createAccount(id, BankAccountRequest.builder().amount(0).build());
         else
             throw new ClientNotFoundException("Client with id " + id + " not found");
     }
