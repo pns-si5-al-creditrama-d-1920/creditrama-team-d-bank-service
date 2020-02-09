@@ -22,15 +22,13 @@ spring:
         binder:
           brokers:
             - ${KAFKA_BROKER:localhost}
-
 security:
   oauth2:
     resource:
-      access-token-uri: http://${AUTHORIZATION_HOST:localhost}:9191/oauth/token
-      token-info-uri: http://${AUTHORIZATION_HOST:localhost}:9191/oauth/check_token
+      access-token-uri: ${AUTHORIZATION_HOST:http://localhost:9191}/oauth/token
+      token-info-uri: ${AUTHORIZATION_HOST:http://localhost:9191}/oauth/check_token
     client:
       client-id: mobile
       client-secret: pin
-
 service.bankaccount: ${BANKACCOUNT_HOST:http://localhost:8083}
 service.card: ${CARD_HOST:http://localhost:8085}

@@ -3,3 +3,7 @@ spring:
     password:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:creditrama;DB_CLOSE_DELAY=-1
+
+
+service.bankaccount: ${BANKACCOUNT_HOST:http://localhost:8083}
+service.card: ${CARD_HOST:http://localhost:8085}
