@@ -19,12 +19,10 @@ import java.util.List;
 @RestController
 public class BankController {
     private final ClientService clientService;
-    private final CardClient cardClient;
 
     @Autowired
     public BankController(ClientService clientService, CardClient cardClient) {
         this.clientService = clientService;
-        this.cardClient = cardClient;
     }
 
     @PostMapping("/clients/{id}/bank-accounts")
@@ -32,11 +30,6 @@ public class BankController {
         try {
             BankAccount createdAccount = clientService.createAccount(clientId);
             Client client = clientService.fetchById(clientId);
-            cardClient.createCard(BankAccountInformation.builder()
-                    .iban(createdAccount.getIban())
-                    .firstName(client.getFirstName())
-                    .lastName(client.getLastName())
-                    .build());
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (ClientNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

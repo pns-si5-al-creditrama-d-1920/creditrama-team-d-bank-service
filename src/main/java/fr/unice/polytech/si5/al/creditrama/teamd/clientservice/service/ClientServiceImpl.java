@@ -1,11 +1,13 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service;
 
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.client.BankAccountClient;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.client.CardClient;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.BankAccountNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ClientNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ErrorWhenCreatingClient;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.Bank;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccount;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccountInformation;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccountRequest;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.Client;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.RecipientAccount;
@@ -29,6 +31,8 @@ public class ClientServiceImpl implements ClientService {
 
     private BankAccountClient bankAccountClient;
 
+    private CardClient cardClient;
+
     @Autowired
     public ClientServiceImpl(ClientRepository customerRepository, PasswordEncoder passwordEncoder, BankService bankService, BankAccountClient bankAccountClient) {
         this.customerRepository = customerRepository;
@@ -51,6 +55,13 @@ public class ClientServiceImpl implements ClientService {
             BankAccount account = bankAccountClient.createAccount(customer.getUserId(), BankAccountRequest.builder().amount(100d).build());
             customer.getBankAccounts().add(account.getIban());
             customer.setBank(bank);
+            //TODO SET CARD NUMBER IN bankAccount AND RETURN CARD
+            cardClient.createCard(BankAccountInformation.builder()
+                    .iban(account.getIban())
+                    .firstName(customer.getFirstName())
+                    .lastName(customer.getLastName())
+                    .build());
+
             return customerRepository.save(customer);
         } catch (Exception e) {
             customerRepository.deleteById(customer.getUserId());
