@@ -2,6 +2,8 @@ package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model;
 
 import lombok.*;
 
+import java.util.Set;
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -17,6 +19,8 @@ public class BankAccount {
     private String bankCode;
 
     private long client;
+
+    private Set<Long> cards;
 
     public void addMoney(double amount) {
         this.balance += amount;

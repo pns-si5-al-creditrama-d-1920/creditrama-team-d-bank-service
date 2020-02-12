@@ -3,6 +3,7 @@ package fr.unice.polytech.si5.al.creditrama.teamd.clientservice.service;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.BankAccountNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.exception.ClientNotFoundException;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.BankAccount;
+import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.Card;
 import fr.unice.polytech.si5.al.creditrama.teamd.clientservice.model.entity.Client;
 import org.springframework.stereotype.Service;
 
@@ -28,4 +29,6 @@ public interface ClientService {
     void removeRecipient(long clientId, String iban) throws ClientNotFoundException;
 
     void initAdmin(String password);
+
+    List<Card> getCardsOfClient(Long clientId) throws ClientNotFoundException;
 }
