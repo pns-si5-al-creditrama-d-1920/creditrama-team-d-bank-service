@@ -14,4 +14,5 @@ public class BankAccountInformation implements Serializable {
     String iban;
     String firstName;
     String lastName;
+    Long userId;
 }
