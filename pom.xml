@@ -10,7 +10,7 @@
     </parent>
     <groupId>fr.unice.polytech.si5.al.creditrama.teamd</groupId>
     <artifactId>clientservice</artifactId>
-    <version>0.0.8-SNAPSHOT</version>
+    <version>0.0.19</version>
     <name>client-service</name>
     <description>ClientService</description>
 
