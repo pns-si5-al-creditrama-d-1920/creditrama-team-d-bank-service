@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +59,7 @@ public class ClientServiceImpl implements ClientService {
                     .iban(account.getIban())
                     .firstName(customer.getFirstName())
                     .lastName(customer.getLastName())
+                    .userId(customer.getUserId())
                     .build());
             bankAccountClient.addCard(account.getIban(), CardRequest.builder().number(card.getNumber()).build());
             return customerRepository.save(customer);
@@ -146,21 +146,5 @@ public class ClientServiceImpl implements ClientService {
             customer.setUsername("admin");
             customerRepository.save(customer);
         }
-    }
-
-    @Override
-    public List<Card> getCardsOfClient(Long clientId) throws ClientNotFoundException {
-        Optional<Client> optionalClient = customerRepository.findById(clientId);
-        if (!optionalClient.isPresent()) {
-            throw new ClientNotFoundException("Client with id " + clientId + " not found");
-        }
-        List<Card> cards = new ArrayList<>();
-        Client client = optionalClient.get();
-        for (String bankAccount : client.getBankAccounts()) {
-            for (Long cardNumber : bankAccountClient.getBankAccount(bankAccount).getCards()) {
-                cards.add(Card.builder().number(cardNumber).build());
-            }
-        }
-        return cards;
     }
 }

@@ -23,7 +23,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -140,27 +141,5 @@ public class ClientServiceTests {
         currentClient = clientService.fetchById(currentClient.getUserId());
         ibans = currentClient.getRecipients().stream().map(RecipientAccount::getIban).collect(Collectors.toList());
         assertFalse(ibans.contains(account.getIban()));
-    }
-
-    @Test
-    void getCardsOfClient() throws ClientNotFoundException {
-        Card expectedCard = Card.builder().number(42L).build();
-        BankAccount expectedAccount = BankAccount.builder()
-                .balance(50.0)
-                .iban("FR8750")
-                .bankCode(String.valueOf(bankService.getCurrentBank().get().getBankCode()))
-                .cards(new HashSet<>(Collections.singletonList(expectedCard.getNumber())))
-                .build();
-
-        when(bankAccountClient.createAccount(anyLong(), any())).thenReturn(expectedAccount);
-        when(cardClient.createCard(any())).thenReturn(expectedCard);
-        when(bankAccountClient.getBankAccount(anyString())).thenReturn(expectedAccount);
-
-        Client currentClient = clientService.save((Client) client);
-        BankAccount bankAccount = clientService.createAccount(currentClient.getUserId());
-
-        List<Card> cards = clientService.getCardsOfClient(currentClient.getUserId());
-        assertEquals(1, cards.size());
-        assertEquals(expectedCard, cards.get(0));
     }
 }
