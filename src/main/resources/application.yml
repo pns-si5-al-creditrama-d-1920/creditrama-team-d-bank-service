@@ -30,6 +30,11 @@ security:
     client:
       client-id: mobile
       client-secret: pin
+<<<<<<< HEAD
 service:
   bankaccount: ${BANKACCOUNT_HOST:http://localhost:8083}
   card: ${CARD_HOST:http://localhost:8085}
+=======
+service.bankaccount: ${BANKACCOUNT_HOST:http://localhost:8083}
+service.card: ${CARD_HOST:http://localhost:8085}
+>>>>>>> develop
