@@ -39,6 +39,7 @@ import static org.mockito.Mockito.when;
 public class ClientServiceTests {
     @MockBean
     private BankAccountClient bankAccountClient;
+    
 
     @MockBean
     private CardClient cardClient;
